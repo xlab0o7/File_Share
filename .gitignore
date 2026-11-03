@@ -1,0 +1,5 @@
+data
+config
+admin-password.txt
+.env
+.DS_Store

@@ -1,0 +1,22 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:v2.32.0
+    restart: unless-stopped
+    environment:
+      # The image's default DB path is outside any volume, so it would reset on recreate
+      - FB_DATABASE=/database/filebrowser.db
+    volumes:
+      # Only this folder is visible to people you share with
+      - ${SHARE_DIR:?Set SHARE_DIR in .env to the folder you want to share}:/srv
+      - ./data:/database
+      - ./config:/config
+    ports:
+      # Local access only; the outside world comes in through the tunnel
+      - "127.0.0.1:8080:80"
+
+  tunnel:
+    image: cloudflare/cloudflared:2025.8.1
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --url http://filebrowser:80
+    depends_on:
+      - filebrowser
