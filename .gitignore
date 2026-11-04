@@ -3,3 +3,6 @@ config
 admin-password.txt
 .env
 .DS_Store
+bin
+logs
+data-local
